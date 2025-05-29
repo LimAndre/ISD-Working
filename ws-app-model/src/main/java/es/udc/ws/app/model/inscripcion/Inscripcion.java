@@ -11,7 +11,6 @@ public class Inscripcion {
     private String tarjetaPago;
     private LocalDateTime fechaInscripcion;
 
-    /** Constructor completo (incluye ID). */
     public Inscripcion(Long inscripcionId, Long cursoId,
                        String emailUsuario, String tarjetaPago,
                        LocalDateTime fechaInscripcion) {
@@ -23,7 +22,6 @@ public class Inscripcion {
                 ? fechaInscripcion.withNano(0) : null;
     }
 
-    /** Constructor para creación (sin ID). */
     public Inscripcion(Long cursoId, String emailUsuario,
                        String tarjetaPago, LocalDateTime fechaInscripcion) {
         this(null, cursoId, emailUsuario, tarjetaPago, fechaInscripcion);
