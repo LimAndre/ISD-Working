@@ -1,33 +1,34 @@
--- ----------------------------------------------------------------------------
--- App Model: Definición de tablas Curso e Inscripcion
--------------------------------------------------------------------------------
-
--- Eliminación (para recrear)
+-- Borra tablas si ya existen (útil en desarrollo)
 DROP TABLE IF EXISTS Inscripcion;
 DROP TABLE IF EXISTS Curso;
 
--- --------------------------------- Curso ------------------------------------
+-- -----------------------------------------------------------------
+-- Tabla Curso
+-- -----------------------------------------------------------------
 CREATE TABLE Curso (
-                       cursoId        BIGINT NOT NULL AUTO_INCREMENT,
-                       ciudad         VARCHAR(100) NOT NULL,
-                       nombre         VARCHAR(255) NOT NULL,
-                       fechaInicio    DATETIME NOT NULL,
-                       fechaAlta      DATETIME NOT NULL,
-                       precio         FLOAT NOT NULL,
-                       plazasMaximas  INT NOT NULL,
-                       CONSTRAINT CursoPK PRIMARY KEY(cursoId),
-                       CONSTRAINT validPrecio CHECK(precio >= 0),
-                       CONSTRAINT validPlazas CHECK(plazasMaximas >= 0)
-) ENGINE = InnoDB;
+                       cursoId BIGINT NOT NULL AUTO_INCREMENT,
+                       ciudad VARCHAR(100) NOT NULL,
+                       nombre VARCHAR(200) NOT NULL,
+                       fechaInicio DATETIME NOT NULL,
+                       fechaAlta DATETIME NOT NULL,
+                       precio FLOAT NOT NULL,
+                       plazasMaximas INT NOT NULL,
+                       PRIMARY KEY (cursoId)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4;
 
--- ------------------------------ Inscripcion -------------------------------
+-- -----------------------------------------------------------------
+-- Tabla Inscripcion
+-- -----------------------------------------------------------------
 CREATE TABLE Inscripcion (
-                             inscripcionId    BIGINT NOT NULL AUTO_INCREMENT,
-                             cursoId          BIGINT NOT NULL,
-                             emailUsuario     VARCHAR(100) NOT NULL,
-                             tarjetaPago      VARCHAR(16) NOT NULL,
+                             inscripcionId BIGINT NOT NULL AUTO_INCREMENT,
+                             cursoId       BIGINT NOT NULL,
+                             emailUsuario  VARCHAR(100) NOT NULL,
+                             tarjetaPago   CHAR(16)    NOT NULL,
                              fechaInscripcion DATETIME NOT NULL,
-                             CONSTRAINT InscripcionPK PRIMARY KEY(inscripcionId),
-                             CONSTRAINT FK_Curso FOREIGN KEY(cursoId)
-                             REFERENCES Curso(cursoId) ON DELETE CASCADE
-) ENGINE = InnoDB;
+                             PRIMARY KEY (inscripcionId),
+                             FOREIGN KEY (cursoId)
+                                 REFERENCES Curso(cursoId)
+                                 ON DELETE CASCADE
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4;

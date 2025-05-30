@@ -105,6 +105,20 @@ public abstract class AbstractSqlInscripcionDao implements SqlInscripcionDao {
     }
 
     @Override
+    public int countByCurso(Connection con, Long cursoId) {
+        String query = "SELECT COUNT(*) FROM Inscripcion WHERE cursoId = ?";
+        try (PreparedStatement pst = con.prepareStatement(query)) {
+            pst.setLong(1, cursoId);
+            try (ResultSet rs = pst.executeQuery()) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void update(Connection connection, Inscripcion inscripcion)
             throws InstanceNotFoundException {
 

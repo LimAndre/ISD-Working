@@ -44,6 +44,33 @@ public final class PropertyValidator {
 
     }
 
+    public static void validateFloat(String propertyName,
+                                     float floatValue,
+                                     float lowerValidLimit,
+                                     float upperValidLimit)
+            throws InputValidationException {
+        if (floatValue < lowerValidLimit || floatValue > upperValidLimit) {
+            throw new InputValidationException(
+                    "Invalid " + propertyName +
+                            " value (must be between " + lowerValidLimit +
+                            " and " + upperValidLimit + "): " + floatValue);
+        }
+    }
+
+    public static void validateInteger(String propertyName,
+                                       int intValue,
+                                       int lowerValidLimit,
+                                       int upperValidLimit)
+            throws InputValidationException {
+        if (intValue < lowerValidLimit || intValue > upperValidLimit) {
+            throw new InputValidationException(
+                    "Invalid " + propertyName +
+                            " value (must be between " + lowerValidLimit +
+                            " and " + upperValidLimit + "): " + intValue);
+        }
+    }
+
+
     public static void validateMandatoryString(String propertyName,
             String stringValue) throws InputValidationException {
 

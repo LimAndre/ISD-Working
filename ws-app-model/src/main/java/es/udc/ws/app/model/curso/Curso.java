@@ -13,6 +13,8 @@ public class Curso {
     private float precio;
     private int plazasMaximas;
 
+    private int plazasDisponibles;
+
     /** Constructor completo (incluye ID). */
     public Curso(Long cursoId, String ciudad, String nombre,
                  LocalDateTime fechaInicio, LocalDateTime fechaAlta,
@@ -92,6 +94,14 @@ public class Curso {
 
     public void setPlazasMaximas(int plazasMaximas) {
         this.plazasMaximas = plazasMaximas;
+    }
+
+    public int getPlazasDisponibles() {
+        return plazasDisponibles;
+    }
+
+    public void setPlazasDisponibles(int plazasDisponibles) {
+        this.plazasDisponibles = plazasDisponibles;
     }
 
     @Override

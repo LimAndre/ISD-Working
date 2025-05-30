@@ -20,6 +20,7 @@ public interface SqlInscripcionDao {
     List<Inscripcion> findByCurso(Connection connection,
                                   Long cursoId);
 
+    int countByCurso(Connection connection, Long cursoId);
 
     void update(Connection connection,
                 Inscripcion inscripcion)
