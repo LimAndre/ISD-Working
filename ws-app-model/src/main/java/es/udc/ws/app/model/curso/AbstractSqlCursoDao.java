@@ -23,19 +23,38 @@ public abstract class AbstractSqlCursoDao implements SqlCursoDao {
     @Override
     public Curso find(Connection connection, Long cursoId)
             throws InstanceNotFoundException {
-        String sql =
-                "SELECT cursoId, ciudad, nombre, fechaInicio, fechaAlta, precio, plazasMaximas " +
+
+        String queryString =
+                "SELECT ciudad, nombre, fechaInicio, fechaAlta, precio, plazasMaximas " +
                         "FROM Curso WHERE cursoId = ?";
 
-        try (PreparedStatement pst = connection.prepareStatement(sql)) {
-            pst.setLong(1, cursoId);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
 
-            try (ResultSet rs = pst.executeQuery()) {
-                if (!rs.next()) {
-                    throw new InstanceNotFoundException(
-                            cursoId, Curso.class.getName());
+            int i = 1;
+            preparedStatement.setLong(i++, cursoId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                if (!resultSet.next()) {
+                    throw new InstanceNotFoundException(cursoId,
+                            Curso.class.getName());
                 }
-                return extractCurso(rs);
+
+                i = 1;
+                String ciudad = resultSet.getString(i++);
+                String nombre = resultSet.getString(i++);
+                Timestamp fechaInicioTs = resultSet.getTimestamp(i++);
+                LocalDateTime fechaInicio =
+                        fechaInicioTs.toLocalDateTime();
+                Timestamp fechaAltaTs = resultSet.getTimestamp(i++);
+                LocalDateTime fechaAlta =
+                        fechaAltaTs.toLocalDateTime();
+                float precio = resultSet.getFloat(i++);
+                int plazasMaximas = resultSet.getInt(i++);
+
+                return new Curso(cursoId, ciudad, nombre,
+                        fechaInicio, fechaAlta,
+                        precio, plazasMaximas);
             }
 
         } catch (SQLException e) {
@@ -47,19 +66,36 @@ public abstract class AbstractSqlCursoDao implements SqlCursoDao {
     public List<Curso> findByCiudadYFecha(Connection connection,
                                           String ciudad,
                                           LocalDateTime desde) {
-        String sql =
+
+        String queryString =
                 "SELECT cursoId, ciudad, nombre, fechaInicio, fechaAlta, precio, plazasMaximas " +
-                        "FROM Curso WHERE ciudad = ? AND fechaInicio >= ? " +
-                        "ORDER BY fechaInicio";
+                        "FROM Curso WHERE ciudad = ? AND fechaInicio >= ? ORDER BY fechaInicio";
 
-        try (PreparedStatement pst = connection.prepareStatement(sql)) {
-            pst.setString(1, ciudad);
-            pst.setTimestamp(2, Timestamp.valueOf(desde));
+        try (PreparedStatement preparedStatement =
+                     connection.prepareStatement(queryString)) {
 
-            try (ResultSet rs = pst.executeQuery()) {
+            int i = 1;
+            preparedStatement.setString(i++, ciudad);
+            preparedStatement.setTimestamp(i++,
+                    Timestamp.valueOf(desde));
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 List<Curso> cursos = new ArrayList<>();
-                while (rs.next()) {
-                    cursos.add(extractCurso(rs));
+                while (resultSet.next()) {
+                    i = 1;
+                    Long id = resultSet.getLong(i++);
+                    String ciu = resultSet.getString(i++);
+                    String nom = resultSet.getString(i++);
+                    Timestamp fechaIniTs = resultSet.getTimestamp(i++);
+                    LocalDateTime fechaIni = fechaIniTs.toLocalDateTime();
+                    Timestamp fechaAltTs = resultSet.getTimestamp(i++);
+                    LocalDateTime fechaAlt = fechaAltTs.toLocalDateTime();
+                    float precio = resultSet.getFloat(i++);
+                    int plazasMax = resultSet.getInt(i++);
+
+                    cursos.add(new Curso(id, ciu, nom,
+                            fechaIni, fechaAlt,
+                            precio, plazasMax));
                 }
                 return cursos;
             }
@@ -72,22 +108,27 @@ public abstract class AbstractSqlCursoDao implements SqlCursoDao {
     @Override
     public void update(Connection connection, Curso curso)
             throws InstanceNotFoundException {
-        String sql =
+
+        String queryString =
                 "UPDATE Curso SET ciudad = ?, nombre = ?, fechaInicio = ?, " +
-                        "fechaAlta = ?, precio = ?, plazasMaximas = ? " +
-                        "WHERE cursoId = ?";
+                        "fechaAlta = ?, precio = ?, plazasMaximas = ? WHERE cursoId = ?";
 
-        try (PreparedStatement pst = connection.prepareStatement(sql)) {
-            pst.setString(1, curso.getCiudad());
-            pst.setString(2, curso.getNombre());
-            pst.setTimestamp(3, Timestamp.valueOf(curso.getFechaInicio()));
-            pst.setTimestamp(4, Timestamp.valueOf(curso.getFechaAlta()));
-            pst.setFloat(5, curso.getPrecio());
-            pst.setInt(6, curso.getPlazasMaximas());
-            pst.setLong(7, curso.getCursoId());
+        try (PreparedStatement preparedStatement =
+                     connection.prepareStatement(queryString)) {
 
-            int updated = pst.executeUpdate();
-            if (updated == 0) {
+            int i = 1;
+            preparedStatement.setString(i++, curso.getCiudad());
+            preparedStatement.setString(i++, curso.getNombre());
+            preparedStatement.setTimestamp(i++,
+                    Timestamp.valueOf(curso.getFechaInicio()));
+            preparedStatement.setTimestamp(i++,
+                    Timestamp.valueOf(curso.getFechaAlta()));
+            preparedStatement.setFloat(i++, curso.getPrecio());
+            preparedStatement.setInt(i++, curso.getPlazasMaximas());
+            preparedStatement.setLong(i++, curso.getCursoId());
+
+            int updatedRows = preparedStatement.executeUpdate();
+            if (updatedRows == 0) {
                 throw new InstanceNotFoundException(
                         curso.getCursoId(), Curso.class.getName());
             }
@@ -100,12 +141,17 @@ public abstract class AbstractSqlCursoDao implements SqlCursoDao {
     @Override
     public void remove(Connection connection, Long cursoId)
             throws InstanceNotFoundException {
-        String sql = "DELETE FROM Curso WHERE cursoId = ?";
 
-        try (PreparedStatement pst = connection.prepareStatement(sql)) {
-            pst.setLong(1, cursoId);
-            int removed = pst.executeUpdate();
-            if (removed == 0) {
+        String queryString =
+                "DELETE FROM Curso WHERE cursoId = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(queryString)) {
+
+            int i = 1;
+            preparedStatement.setLong(i++, cursoId);
+
+            int removedRows = preparedStatement.executeUpdate();
+            if (removedRows == 0) {
                 throw new InstanceNotFoundException(
                         cursoId, Curso.class.getName());
             }
@@ -114,25 +160,4 @@ public abstract class AbstractSqlCursoDao implements SqlCursoDao {
             throw new RuntimeException(e);
         }
     }
-
-    /**
-     * Extrae un objeto Curso del ResultSet en la fila actual.
-     */
-    private static Curso extractCurso(ResultSet rs) throws SQLException {
-        Long id = rs.getLong("cursoId");
-        String ciudad = rs.getString("ciudad");
-        String nombre = rs.getString("nombre");
-        LocalDateTime fechaInicio =
-                rs.getTimestamp("fechaInicio").toLocalDateTime();
-        LocalDateTime fechaAlta =
-                rs.getTimestamp("fechaAlta").toLocalDateTime();
-        float precio = rs.getFloat("precio");
-        int plazasMax = rs.getInt("plazasMaximas");
-
-        return new Curso(id, ciudad, nombre,
-                fechaInicio, fechaAlta,
-                precio, plazasMax);
-    }
-
-    // El método create() se deja abstracto para que la subclase lo implemente.
 }
