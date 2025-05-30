@@ -39,9 +39,9 @@ public class CursoServiceImpl implements CursoService{
         PropertyValidator.validateMandatoryString("ciudad", curso.getCiudad());
         PropertyValidator.validateMandatoryString("nombre", curso.getNombre());
         // Ahora usas los nuevos métodos:
-        PropertyValidator.validateFloat("precio",
+        PropertyValidator.validateDouble("precio",
                 curso.getPrecio(), 0f, Float.MAX_VALUE);
-        PropertyValidator.validateInteger("plazasMaximas",
+        PropertyValidator.validateLong("plazasMaximas",
                 curso.getPlazasMaximas(), 0, Integer.MAX_VALUE);
 
         LocalDateTime fechaInicio = curso.getFechaInicio();
@@ -110,7 +110,7 @@ public class CursoServiceImpl implements CursoService{
                 connection.setAutoCommit(false);
 
                 if (inscDao.existsByCurso(connection, cursoId)) {
-                    throw new CourseNotRemovableException();
+                    throw new CourseNotRemovableException(cursoId);
                 }
 
                 cursoDao.remove(connection, cursoId);
@@ -176,7 +176,7 @@ public class CursoServiceImpl implements CursoService{
                 Curso curso = cursoDao.find(connection, cursoId);
                 LocalDateTime now = LocalDateTime.now().withNano(0);
                 if (now.isAfter(curso.getFechaInicio())) {
-                    throw new CourseClosedException();
+                    throw new CourseClosedException(cursoId);
                 }
                 int ocupadas = inscDao.findByCurso(connection, cursoId).size();
                 if (ocupadas >= curso.getPlazasMaximas()) {

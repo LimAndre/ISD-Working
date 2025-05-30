@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>es.udc.ws.app</groupId>
@@ -14,12 +14,11 @@
         <module>ws-app-thrift</module>
         <module>ws-app-service</module>
         <module>ws-app-client</module>
-        <module>ws-util</module>
     </modules>
 
     <!-- =================================================================== -->
-    <!-- Default values for properties. These default values are expected 
-        to be valid for most profiles. Specific profiles can overwrite values when 
+    <!-- Default values for properties. These default values are expected
+        to be valid for most profiles. Specific profiles can overwrite values when
         necessary. -->
     <properties>
         <!-- Data source properties -->
@@ -47,13 +46,13 @@
         <jdbcDriver.version>8.4.0</jdbcDriver.version>
         <jdbcDriver.className>com.mysql.cj.jdbc.Driver</jdbcDriver.className>
 
-		<!-- Data source properties -->
-		<dataSource.baseUrl>jdbc:mysql://localhost/ws</dataSource.baseUrl>
+        <!-- Data source properties -->
+        <dataSource.baseUrl>jdbc:mysql://localhost/ws</dataSource.baseUrl>
         <dataSource.url>${dataSource.baseUrl}?useSSL=false&amp;serverTimezone=Europe/Madrid&amp;allowPublicKeyRetrieval=true</dataSource.url>
         <testDataSource.url>${dataSource.baseUrl}test?useSSL=false&amp;serverTimezone=Europe/Madrid&amp;allowPublicKeyRetrieval=true</testDataSource.url>
-		<dataSource.createTablesScript>MySQLCreateTables.sql</dataSource.createTablesScript>		
+        <dataSource.createTablesScript>MySQLCreateTables.sql</dataSource.createTablesScript>
 
-	    <!-- Plugin versions -->
+        <!-- Plugin versions -->
         <compilerMavenPlugin.version>3.13.0</compilerMavenPlugin.version>
         <resourcesMavenPlugin.version>3.3.1</resourcesMavenPlugin.version>
         <execMavenPlugin.version>3.3.0</execMavenPlugin.version>
@@ -181,19 +180,19 @@
     <dependencyManagement>
         <dependencies>
             <!-- JDBC driver -->
-			<dependency>
-				<groupId>${jdbcDriver.groupId}</groupId>
-				<artifactId>${jdbcDriver.artifactId}</artifactId>
-				<version>${jdbcDriver.version}</version>
-				<scope>test</scope>
-			</dependency>
+            <dependency>
+                <groupId>${jdbcDriver.groupId}</groupId>
+                <artifactId>${jdbcDriver.artifactId}</artifactId>
+                <version>${jdbcDriver.version}</version>
+                <scope>test</scope>
+            </dependency>
             <!-- Commons DBCP - JDBC Connection Pool -->
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-dbcp2</artifactId>
-				<version>${commonsDbcp.version}</version>
-				<scope>test</scope>
-			</dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-dbcp2</artifactId>
+                <version>${commonsDbcp.version}</version>
+                <scope>test</scope>
+            </dependency>
             <!-- JUnit -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -214,7 +213,7 @@
                 <artifactId>ws-util</artifactId>
                 <version>${ws-util.version}</version>
             </dependency>
-			<!-- Commons HttpClient -->
+            <!-- Commons HttpClient -->
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
@@ -226,13 +225,13 @@
                 <artifactId>httpclient5-fluent</artifactId>
                 <version>${httpclient5.version}</version>
             </dependency>
-			<!-- Jackson -->
-			<dependency>
-    			<groupId>com.fasterxml.jackson.core</groupId>
-			    <artifactId>jackson-databind</artifactId>
-    			<version>${jackson.version}</version>
-			</dependency>
-			<!-- Thrift -->
+            <!-- Jackson -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <!-- Thrift -->
             <dependency>
                 <groupId>org.apache.thrift</groupId>
                 <artifactId>libthrift</artifactId>
@@ -267,7 +266,7 @@
         <!-- Filtering -->
         <resources>
 
-            <!-- Continue considering resources the files in src/main/resources, 
+            <!-- Continue considering resources the files in src/main/resources,
                 but without applying filtering. -->
             <resource>
                 <directory>src/main/resources</directory>
@@ -286,7 +285,7 @@
 
         <testResources>
 
-            <!-- Continue considering resources the files in src/test/resources, 
+            <!-- Continue considering resources the files in src/test/resources,
                 but without applying filtering. -->
             <testResource>
                 <directory>src/test/resources</directory>
@@ -297,65 +296,65 @@
 
         <plugins>
 
- 			<!-- ========================================================== -->
-			<!-- Compiler configuration -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${compilerMavenPlugin.version}</version>
-				<configuration>
-					<verbose>true</verbose>
+            <!-- ========================================================== -->
+            <!-- Compiler configuration -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compilerMavenPlugin.version}</version>
+                <configuration>
+                    <verbose>true</verbose>
                     <!-- Source & target are not necessary, but intelliJ depends on it to set the Java compiler settings  -->
                     <source>21</source>
                     <target>21</target>
-					<release>21</release>
-					<encoding>${project.build.sourceEncoding}</encoding>
-					<showDeprecation>true</showDeprecation>
-					<showWarnings>true</showWarnings>
-				</configuration>
-			</plugin>
+                    <release>21</release>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
 
-			<!-- ========================================================== -->
-			<!-- Resources plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${resourcesMavenPlugin.version}</version>
-			</plugin>
+            <!-- ========================================================== -->
+            <!-- Resources plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${resourcesMavenPlugin.version}</version>
+            </plugin>
 
-			<!-- ========================================================== -->
-			<!-- Surefire plugin -->
-			<!-- Default version does not support JUnit 5. -->
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefireMavenPlugin.version}</version>
+            <!-- ========================================================== -->
+            <!-- Surefire plugin -->
+            <!-- Default version does not support JUnit 5. -->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefireMavenPlugin.version}</version>
                 <configuration>
                     <forkCount>0</forkCount>
                 </configuration>
-			</plugin>
-
-  			<!-- ========================================================== -->
-			<!-- Exec plugin -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>${execMavenPlugin.version}</version>
-			</plugin>
+            </plugin>
 
             <!-- ========================================================== -->
-			<!-- WAR plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>${warMavenPlugin.version}</version>
-			</plugin>
-            
+            <!-- Exec plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${execMavenPlugin.version}</version>
+            </plugin>
+
+            <!-- ========================================================== -->
+            <!-- WAR plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${warMavenPlugin.version}</version>
+            </plugin>
+
             <!-- ========================================================== -->
             <!-- Setting SQL Plugin -->
-            <!-- - Configuration specifies onError="continue" since SQL scripts 
-                try to drop tables before creating them (which causes errors if such tables 
-                do not exist yet). - Configuartion specifies autocommit="true" since some 
-                drivers (e.g the PostgreSQL JDBC 2 driver) do not commit changes if some 
+            <!-- - Configuration specifies onError="continue" since SQL scripts
+                try to drop tables before creating them (which causes errors if such tables
+                do not exist yet). - Configuartion specifies autocommit="true" since some
+                drivers (e.g the PostgreSQL JDBC 2 driver) do not commit changes if some
                 error ocurrs. -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -411,43 +410,43 @@
                 </executions>
             </plugin>
 
-			<!-- ========================================================== -->
-			<!-- Assembly configuration -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>${assemblyMavenPlugin.version}</version>
-				<configuration>
+            <!-- ========================================================== -->
+            <!-- Assembly configuration -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${assemblyMavenPlugin.version}</version>
+                <configuration>
                     <finalName>${project.artifactId}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
-					<descriptors>
-						<descriptor>src/main/assembly/src.xml</descriptor>
-					</descriptors>
-				</configuration>
-			</plugin>
+                    <descriptors>
+                        <descriptor>src/main/assembly/src.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
 
-			<!-- ========================================================== -->
-			<!-- Enforcer configuration -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>${enforcerMavenPlugin.version}</version>
-				<executions>
-					<execution>
-						<id>enforce-maven</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireMavenVersion>
-								<version>3.5.0</version>
-								</requireMavenVersion>
-							</rules>    
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>		            
+            <!-- ========================================================== -->
+            <!-- Enforcer configuration -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${enforcerMavenPlugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.5.0</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
 
