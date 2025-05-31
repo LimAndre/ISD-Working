@@ -5,6 +5,7 @@ import java.util.List;
 
 import es.udc.ws.app.model.curso.Curso;
 import es.udc.ws.app.model.cursoservice.exceptions.CourseClosedException;
+import es.udc.ws.app.model.cursoservice.exceptions.CourseFullException;
 import es.udc.ws.app.model.inscripcion.Inscripcion;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
@@ -33,7 +34,8 @@ public interface CursoService {
                               String tarjetaPago)
                 throws InstanceNotFoundException,
                 InputValidationException,
-                CourseClosedException;
+                CourseClosedException,
+                CourseFullException;
 
         Inscripcion findInscripcion(Long inscripcionId)
                 throws InstanceNotFoundException;

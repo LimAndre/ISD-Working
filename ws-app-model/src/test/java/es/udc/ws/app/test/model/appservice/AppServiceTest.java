@@ -4,6 +4,7 @@ import es.udc.ws.app.model.curso.Curso;
 import es.udc.ws.app.model.cursoservice.CursoService;
 import es.udc.ws.app.model.cursoservice.CursoServiceFactory;
 import es.udc.ws.app.model.cursoservice.exceptions.CourseClosedException;
+import es.udc.ws.app.model.cursoservice.exceptions.CourseFullException;
 import es.udc.ws.app.model.inscripcion.Inscripcion;
 import es.udc.ws.app.model.inscripcion.SqlInscripcionDao;
 import es.udc.ws.app.model.inscripcion.SqlInscripcionDaoFactory;
@@ -199,7 +200,7 @@ public class AppServiceTest {
         Long cursoId = c.getCursoId();
         Long ins1 = cursoService.inscribirUsuario(cursoId, VALID_EMAIL, VALID_CARD);
         try {
-            assertThrows(InputValidationException.class,
+            assertThrows(CourseFullException.class,
                     () -> cursoService.inscribirUsuario(cursoId, "otro@user.com", VALID_CARD));
         } finally {
             removeInscripcion(ins1);

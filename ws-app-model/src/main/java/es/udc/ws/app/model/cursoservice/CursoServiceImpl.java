@@ -8,6 +8,7 @@ import java.util.List;
 import es.udc.ws.app.model.curso.SqlCursoDao;
 import es.udc.ws.app.model.curso.SqlCursoDaoFactory;
 import es.udc.ws.app.model.cursoservice.exceptions.CourseClosedException;
+import es.udc.ws.app.model.cursoservice.exceptions.CourseFullException;
 import es.udc.ws.app.model.inscripcion.SqlInscripcionDao;
 import es.udc.ws.app.model.inscripcion.SqlInscripcionDaoFactory;
 import es.udc.ws.util.exceptions.InputValidationException;
@@ -178,8 +179,8 @@ public class CursoServiceImpl implements CursoService{
     public Long inscribirUsuario(Long cursoId,
                                  String emailUsuario,
                                  String tarjetaPago)
-                                 throws InstanceNotFoundException, InputValidationException, CourseClosedException
-    {
+            throws InstanceNotFoundException, InputValidationException,
+            CourseClosedException, CourseFullException {
 
         // Validación de datos de inscripción
         PropertyValidator.validateMandatoryString("emailUsuario", emailUsuario);
@@ -192,12 +193,14 @@ public class CursoServiceImpl implements CursoService{
 
                 Curso curso = cursoDao.find(connection, cursoId);
                 LocalDateTime now = LocalDateTime.now().withNano(0);
+
                 if (now.isAfter(curso.getFechaInicio())) {
                     throw new CourseClosedException(cursoId);
                 }
+
                 int ocupadas = inscDao.findByCurso(connection, cursoId).size();
                 if (ocupadas >= curso.getPlazasMaximas()) {
-                    throw new InputValidationException("No quedan plazas disponibles");
+                    throw new CourseFullException(cursoId);
                 }
 
                 Inscripcion ins = new Inscripcion(cursoId, emailUsuario, tarjetaPago, now);
@@ -207,16 +210,20 @@ public class CursoServiceImpl implements CursoService{
                 return creada.getInscripcionId();
 
             } catch (InstanceNotFoundException e) {
-                connection.commit();
+                connection.commit();  // ya que el find lanzó la excepción y no hay cambios
                 throw e;
-            } catch (RuntimeException | Error | SQLException e) {
+            } catch (SQLException e) {
                 connection.rollback();
                 throw new RuntimeException("Error al inscribir usuario", e);
+            } catch (RuntimeException | Error e) {
+                connection.rollback();
+                throw e;
             }
         } catch (SQLException e) {
             throw new RuntimeException("No se pudo conectar a la base de datos", e);
         }
     }
+
 
     @Override
     public Inscripcion findInscripcion(Long inscripcionId)

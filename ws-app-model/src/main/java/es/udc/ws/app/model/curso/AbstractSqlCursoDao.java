@@ -69,7 +69,7 @@ public abstract class AbstractSqlCursoDao implements SqlCursoDao {
 
         String queryString =
                 "SELECT cursoId, ciudad, nombre, fechaInicio, fechaAlta, precio, plazasMaximas " +
-                        "FROM Curso WHERE ciudad = ? AND fechaInicio >= ? ORDER BY fechaInicio";
+                        "FROM Curso WHERE ciudad = ? AND fechaInicio >= ? ORDER BY fechaInicio ASC";
 
         try (PreparedStatement preparedStatement =
                      connection.prepareStatement(queryString)) {

@@ -36,6 +36,15 @@ public class Curso {
         this(null, ciudad, nombre, fechaInicio, fechaAlta, precio, plazasMaximas);
     }
 
+    /** Constructor para creación (sin fechaAlta). */
+    public Curso(String ciudad, String nombre, LocalDateTime fechaInicio, float precio, int plazasMaximas) {
+        this.ciudad = ciudad;
+        this.nombre = nombre;
+        this.fechaInicio = fechaInicio;
+        this.precio = precio;
+        this.plazasMaximas = plazasMaximas;
+    }
+
     /* Getters y setters */
 
     public Long getCursoId() {

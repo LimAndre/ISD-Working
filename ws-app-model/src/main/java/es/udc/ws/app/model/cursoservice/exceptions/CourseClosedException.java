@@ -9,4 +9,7 @@ public class CourseClosedException extends Exception{
         this.cursoId = cursoId;
     }
 
+    public Long getCursoId() {
+        return cursoId;
+    }
 }
