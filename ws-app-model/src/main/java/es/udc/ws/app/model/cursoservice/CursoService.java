@@ -5,7 +5,6 @@ import java.util.List;
 
 import es.udc.ws.app.model.curso.Curso;
 import es.udc.ws.app.model.cursoservice.exceptions.CourseClosedException;
-import es.udc.ws.app.model.cursoservice.exceptions.CourseNotRemovableException;
 import es.udc.ws.app.model.inscripcion.Inscripcion;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
@@ -21,13 +20,12 @@ public interface CursoService {
                 InstanceNotFoundException;
 
         void removeCurso(Long cursoId)
-                throws InstanceNotFoundException,
-                CourseNotRemovableException;
+                throws InstanceNotFoundException;
 
         Curso findCurso(Long cursoId)
                 throws InstanceNotFoundException;
 
-        List<Curso> buscarCursos(String ciudad, LocalDateTime desde);
+        List<Curso> buscarCursosByFechaYCiuddad(String ciudad, LocalDateTime desde);
 
 
         Long inscribirUsuario(Long cursoId,

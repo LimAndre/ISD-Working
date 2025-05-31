@@ -8,7 +8,6 @@ import java.util.List;
 import es.udc.ws.app.model.curso.SqlCursoDao;
 import es.udc.ws.app.model.curso.SqlCursoDaoFactory;
 import es.udc.ws.app.model.cursoservice.exceptions.CourseClosedException;
-import es.udc.ws.app.model.cursoservice.exceptions.CourseNotRemovableException;
 import es.udc.ws.app.model.inscripcion.SqlInscripcionDao;
 import es.udc.ws.app.model.inscripcion.SqlInscripcionDaoFactory;
 import es.udc.ws.util.exceptions.InputValidationException;
@@ -38,24 +37,25 @@ public class CursoServiceImpl implements CursoService{
     private void validateCurso(Curso curso) throws InputValidationException {
         PropertyValidator.validateMandatoryString("ciudad", curso.getCiudad());
         PropertyValidator.validateMandatoryString("nombre", curso.getNombre());
-        // Ahora usas los nuevos métodos:
         PropertyValidator.validateDouble("precio",
                 curso.getPrecio(), 0f, Float.MAX_VALUE);
         PropertyValidator.validateLong("plazasMaximas",
                 curso.getPlazasMaximas(), 0, Integer.MAX_VALUE);
-
-        LocalDateTime fechaInicio = curso.getFechaInicio();
-        LocalDateTime now = LocalDateTime.now().withNano(0);
-        if (fechaInicio == null || fechaInicio.isBefore(now.plusDays(15))) {
-            throw new InputValidationException(
-                    "La fecha de inicio debe ser al menos 15 días después del alta");
-        }
+        // ← AQUÍ ya no validamos fechaInicio
     }
 
     @Override
     public Curso altaCurso(Curso curso) throws InputValidationException {
         validateCurso(curso);
-        curso.setFechaAlta(LocalDateTime.now().withNano(0));
+        LocalDateTime fechaAlta = LocalDateTime.now().withNano(0);
+        curso.setFechaAlta(fechaAlta);
+
+        // Validar ahora fechaInicio vs. fechaAlta
+        LocalDateTime fechaInicio = curso.getFechaInicio();
+        if (fechaInicio == null || fechaInicio.isBefore(fechaAlta.plusDays(15))) {
+            throw new InputValidationException(
+                    "La fecha de inicio debe ser al menos 15 días después del alta");
+        }
 
         try (Connection connection = dataSource.getConnection()) {
             try {
@@ -79,44 +79,61 @@ public class CursoServiceImpl implements CursoService{
     @Override
     public void updateCurso(Curso curso)
             throws InputValidationException, InstanceNotFoundException {
-        validateCurso(curso);
 
         try (Connection connection = dataSource.getConnection()) {
             try {
                 connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
                 connection.setAutoCommit(false);
 
+                // 1) Comprobar existencia y obtener fechaAlta real
+                Curso existente = cursoDao.find(connection, curso.getCursoId());
+
+                // 2) Asignar fechaAlta real antes de validar
+                curso.setFechaAlta(existente.getFechaAlta());
+
+                // 3) Validar datos completos (ahora que fechaAlta no es null)
+                validateCurso(curso);
+
+                // 4) Ejecutar UPDATE
                 cursoDao.update(connection, curso);
 
                 connection.commit();
-            } catch (InstanceNotFoundException e) {
+            }
+            catch (InstanceNotFoundException e) {
                 connection.commit();
                 throw e;
-            } catch (RuntimeException | Error | SQLException e) {
+            }
+            catch (InputValidationException e) {
+                connection.commit();
+                throw e;
+            }
+            catch (SQLException e) {
                 connection.rollback();
                 throw new RuntimeException("Error al actualizar curso", e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("No se pudo conectar a la base de datos", e);
+            catch (RuntimeException | Error e) {
+                connection.rollback();
+                throw e;
+            }
+        }
+        catch (SQLException e) {
+            throw new RuntimeException("No se pudo conectar a la BD", e);
         }
     }
 
+
     @Override
     public void removeCurso(Long cursoId)
-            throws InstanceNotFoundException, CourseNotRemovableException {
+            throws InstanceNotFoundException {
         try (Connection connection = dataSource.getConnection()) {
             try {
                 connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
                 connection.setAutoCommit(false);
-
-                if (inscDao.existsByCurso(connection, cursoId)) {
-                    throw new CourseNotRemovableException(cursoId);
-                }
 
                 cursoDao.remove(connection, cursoId);
 
                 connection.commit();
-            } catch (InstanceNotFoundException | CourseNotRemovableException e) {
+            } catch (InstanceNotFoundException e) {
                 connection.commit();
                 throw e;
             } catch (RuntimeException | Error | SQLException e) {
@@ -138,7 +155,7 @@ public class CursoServiceImpl implements CursoService{
     }
 
     @Override
-    public List<Curso> buscarCursos(String ciudad, LocalDateTime desde) {
+    public List<Curso> buscarCursosByFechaYCiuddad(String ciudad, LocalDateTime desde) {
         try (Connection connection = dataSource.getConnection()) {
 
             List<Curso> cursos =

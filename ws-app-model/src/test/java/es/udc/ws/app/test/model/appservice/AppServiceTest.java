@@ -4,7 +4,6 @@ import es.udc.ws.app.model.curso.Curso;
 import es.udc.ws.app.model.cursoservice.CursoService;
 import es.udc.ws.app.model.cursoservice.CursoServiceFactory;
 import es.udc.ws.app.model.cursoservice.exceptions.CourseClosedException;
-import es.udc.ws.app.model.cursoservice.exceptions.CourseNotRemovableException;
 import es.udc.ws.app.model.inscripcion.Inscripcion;
 import es.udc.ws.app.model.inscripcion.SqlInscripcionDao;
 import es.udc.ws.app.model.inscripcion.SqlInscripcionDaoFactory;
@@ -143,26 +142,12 @@ public class AppServiceTest {
     }
 
     @Test
-    public void testRemoveCursoWithInscripciones() throws Exception {
-        Curso c = createCurso(getValidCurso("Valencia"));
-        Long inscId = null;
-        try {
-            inscId = cursoService.inscribirUsuario(c.getCursoId(), VALID_EMAIL, VALID_CARD);
-            Long cursoId = c.getCursoId();
-            assertThrows(CourseNotRemovableException.class, () -> cursoService.removeCurso(cursoId));
-        } finally {
-            if (inscId != null) removeInscripcion(inscId);
-            removeCurso(c.getCursoId());
-        }
-    }
-
-    @Test
     public void testBuscarCursos() throws Exception {
         Curso c1 = createCurso(getValidCurso("A"));
         Curso c2 = createCurso(getValidCurso("A"));
         Curso c3 = createCurso(getValidCurso("B"));
         try {
-            List<Curso> list = cursoService.buscarCursos("A", LocalDateTime.now());
+            List<Curso> list = cursoService.buscarCursosByFechaYCiuddad("A", LocalDateTime.now());
             assertEquals(2, list.size());
             for (Curso c : list) {
                 assertEquals("A", c.getCiudad());

@@ -18,12 +18,13 @@ public class Jdbc3CcSqlCursoDao extends AbstractSqlCursoDao{
         try (PreparedStatement pst = connection.prepareStatement(
                 sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            pst.setString(1, curso.getCiudad());
-            pst.setString(2, curso.getNombre());
-            pst.setTimestamp(3, Timestamp.valueOf(curso.getFechaInicio()));
-            pst.setTimestamp(4, Timestamp.valueOf(curso.getFechaAlta()));
-            pst.setFloat(5, curso.getPrecio());
-            pst.setInt(6, curso.getPlazasMaximas());
+            int i = 1;
+            pst.setString(i++, curso.getCiudad());
+            pst.setString(i++, curso.getNombre());
+            pst.setTimestamp(i++, Timestamp.valueOf(curso.getFechaInicio()));
+            pst.setTimestamp(i++, Timestamp.valueOf(curso.getFechaAlta()));
+            pst.setFloat(i++, curso.getPrecio());
+            pst.setInt(i++, curso.getPlazasMaximas());
 
             int affectedRows = pst.executeUpdate();
             if (affectedRows == 0) {
@@ -33,17 +34,21 @@ public class Jdbc3CcSqlCursoDao extends AbstractSqlCursoDao{
             try (ResultSet rs = pst.getGeneratedKeys()) {
                 if (rs.next()) {
                     Long id = rs.getLong(1);
-                    curso.setCursoId(id);
+                    // Devolvemos un nuevo objeto Curso con el ID generado
+                    return new Curso(id,
+                            curso.getCiudad(),
+                            curso.getNombre(),
+                            curso.getFechaInicio(),
+                            curso.getFechaAlta(),
+                            curso.getPrecio(),
+                            curso.getPlazasMaximas());
                 } else {
                     throw new SQLException("Creating curso failed, no ID obtained.");
                 }
             }
 
-            return curso;
-
         } catch (SQLException e) {
             throw new RuntimeException("Error al crear curso", e);
         }
     }
-
 }
