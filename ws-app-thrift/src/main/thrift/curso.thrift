@@ -26,7 +26,7 @@ exception ThriftInstanceNotFoundException {
     2: string instanceType
 }
 
-exception ThriftCourseFullExceptionException {
+exception ThriftCourseFullException {
     1: i64 cursoId
 }
 
@@ -46,7 +46,7 @@ service ThriftCursoService {
 
    list<ThriftCursoDto> buscarCursosByFechaYCiudad (1: string ciudad)
 
-   i64 inscribirUsuario(1: i64 cursoId, 2: string emailUsuario, 3: string tarjetaCredito) throws (1: ThriftInputValidationException e, 2: ThriftCourseClosedException ee, 3:ThriftCourseFullExceptionException eee)
+   i64 inscribirUsuario(1: i64 cursoId, 2: string emailUsuario, 3: string tarjetaCredito) throws (1: ThriftInputValidationException e, 2: ThriftCourseClosedException ee, 3:ThriftCourseFullException eee)
 
    ThriftInscripcionDto findInscripcion(1: i64 inscripcionId) throws (1: ThriftInstanceNotFoundException e)
 }

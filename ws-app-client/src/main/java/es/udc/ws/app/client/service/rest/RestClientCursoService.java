@@ -63,15 +63,15 @@ public class RestClientCursoService implements ClientCursoService {
     }
 
     @Override
-    public Long inscribirCurso(ClientInscripcionDto inscripcionDto)
+    public Long inscribirCurso(Long cursoId, String emailUsuario, String creditCardNumber)
             throws InputValidationException, InstanceNotFoundException,
             ClientCourseClosedException, ClientCourseFullException {
         try {
             ClassicHttpResponse response = (ClassicHttpResponse) Request.post(getEndpointAddress() + "inscripciones")
                     .bodyForm(Form.form()
-                            .add("cursoId", inscripcionDto.getCursoId().toString())
-                            .add("email", inscripcionDto.getEmailUsuario())
-                            .add("tarjeta", inscripcionDto.getTarjetaCredito())
+                            .add("cursoId", cursoId.toString())
+                            .add("email", emailUsuario)
+                            .add("tarjeta", creditCardNumber)
                             .build())
                     .execute().returnResponse();
 

@@ -13,7 +13,7 @@ import es.udc.ws.cursos.thrift.ThriftCursoService;
 import es.udc.ws.cursos.thrift.ThriftInputValidationException;
 import es.udc.ws.cursos.thrift.ThriftInstanceNotFoundException;
 import es.udc.ws.cursos.thrift.ThriftCourseClosedException;
-import es.udc.ws.cursos.thrift.ThriftCourseFullExceptionException;
+import es.udc.ws.cursos.thrift.ThriftCourseFullException;
 import es.udc.ws.cursos.thrift.ThriftCursoDto;
 import es.udc.ws.cursos.thrift.ThriftInscripcionDto;
 
@@ -91,7 +91,7 @@ public class ThriftCursoServiceImpl implements ThriftCursoService.Iface{
     public long inscribirUsuario(long cursoId, String emailUsuario, String tarjetaCredito)
             throws ThriftInputValidationException,
             ThriftCourseClosedException,
-            ThriftCourseFullExceptionException,
+            ThriftCourseFullException,
             ThriftInstanceNotFoundException {
 
         try {
@@ -109,7 +109,7 @@ public class ThriftCursoServiceImpl implements ThriftCursoService.Iface{
             throw new ThriftCourseClosedException(e.getCursoId());
 
         } catch (CourseFullException e) {
-            throw new ThriftCourseFullExceptionException(
+            throw new ThriftCourseFullException(
                     e.getCursoId());
         }
     }

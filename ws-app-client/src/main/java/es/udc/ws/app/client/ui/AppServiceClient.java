@@ -72,11 +72,11 @@ public class AppServiceClient {
             // [inscribirse] AppServiceClient -i <courseId> <emailUsuario> <numeroTarjeta>
             validateArgs(args, 4, new int[] {1});
             try {
-                Long inscriptionId = clientCursoService.inscribirCurso(new ClientInscripcionDto(
+                Long inscriptionId = clientCursoService.inscribirCurso(
                         Long.parseLong(args[1]),  // courseId
                         args[2],                  // emailUsuario
                         args[3]                   // numeroTarjeta
-                ));
+                );
 
                 System.out.println("Curso: " + args[1] + ". Se ha suscrito satisfactoriamente " + inscriptionId);
             } catch (NumberFormatException | InstanceNotFoundException |

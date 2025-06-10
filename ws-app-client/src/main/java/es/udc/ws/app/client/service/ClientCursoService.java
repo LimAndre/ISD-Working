@@ -16,7 +16,7 @@ public interface ClientCursoService {
 
     List<ClientCursoDto> findCursos(String ciudad) throws InputValidationException;
 
-    Long inscribirCurso(ClientInscripcionDto inscripcionDto)
+    Long inscribirCurso(Long cursoId, String emailUsuario, String creditCardNumber)
             throws InputValidationException,
             InstanceNotFoundException,
             ClientCourseClosedException,

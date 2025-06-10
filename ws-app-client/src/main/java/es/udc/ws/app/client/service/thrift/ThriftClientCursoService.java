@@ -14,8 +14,6 @@ import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
-import es.udc.ws.app.client.service.thrift.ClientInscripcionDtoToThriftInscripcionDtoConversor;
-
 import es.udc.ws.cursos.thrift.ThriftCursoService;
 import es.udc.ws.cursos.thrift.ThriftInputValidationException;
 import es.udc.ws.cursos.thrift.ThriftInstanceNotFoundException;
@@ -57,14 +55,15 @@ public class ThriftClientCursoService implements ClientCursoService {
             transport.open();
 
 
-            return ClientCursoDtoToThriftCursoDtoConversor.toClientCursoDtos(client.buscarCursosByFecha(ciudad));
+            return ClientCursoDtoToThriftCursoDtoConversor.toClientCursoDtos(
+                    client.buscarCursosByFechaYCiudad(ciudad));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Long inscribirCurso(ClientInscripcionDto inscripcionDto)
+    public Long inscribirCurso(Long cursoId, String emailUsuario, String creditCardNumber)
             throws InputValidationException,
             InstanceNotFoundException,
             ClientCourseClosedException,
@@ -73,12 +72,11 @@ public class ThriftClientCursoService implements ClientCursoService {
         ThriftCursoService.Client client = getClient();
 
         try (TTransport transport = client.getInputProtocol().getTransport()) {
+
             transport.open();
-            // Invocación Thrift:
-            return client.inscribirUsuario(
-                    ClientInscripcionDtoToThriftInscripcionDtoConversor
-                            .toThriftInscripcionDto(inscripcionDto)
-            );
+
+            return client.inscribirUsuario(cursoId, emailUsuario, creditCardNumber);
+
         } catch (ThriftInputValidationException e) {
             throw new InputValidationException(e.getMessage());
         } catch (ThriftInstanceNotFoundException e) {
