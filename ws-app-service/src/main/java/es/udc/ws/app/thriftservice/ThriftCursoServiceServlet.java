@@ -5,7 +5,7 @@ import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocolFactory;
 
-import es.udc.ws.app.cursos.thrift.ThriftCursoService;
+import es.udc.ws.cursos.thrift.ThriftCursoService;
 
 public class ThriftCursoServiceServlet extends ThriftHttpServletTemplate {
 

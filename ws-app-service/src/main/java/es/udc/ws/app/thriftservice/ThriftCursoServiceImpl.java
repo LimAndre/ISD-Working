@@ -9,11 +9,13 @@ import es.udc.ws.app.model.inscripcion.Inscripcion;
 import es.udc.ws.util.exceptions.InputValidationException;
 import es.udc.ws.util.exceptions.InstanceNotFoundException;
 
-import es.udc.ws.app.cursos.thrift.ThriftCursoService;
-import es.udc.ws.app.cursos.thrift.ThriftInputValidationException;
-import es.udc.ws.app.cursos.thrift.ThriftInstanceNotFoundException;
-import es.udc.ws.app.cursos.thrift.ThriftCourseClosedException;
-import es.udc.ws.app.cursos.thrift.ThriftCourseFullException;
+import es.udc.ws.cursos.thrift.ThriftCursoService;
+import es.udc.ws.cursos.thrift.ThriftInputValidationException;
+import es.udc.ws.cursos.thrift.ThriftInstanceNotFoundException;
+import es.udc.ws.cursos.thrift.ThriftCourseClosedException;
+import es.udc.ws.cursos.thrift.ThriftCourseFullExceptionException;
+import es.udc.ws.cursos.thrift.ThriftCursoDto;
+import es.udc.ws.cursos.thrift.ThriftInscripcionDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -76,13 +78,13 @@ public class ThriftCursoServiceImpl implements ThriftCursoService.Iface{
     }
 
     @Override
-    public List<ThriftCursoDto> buscarCursosByFechaYCiuddad(String ciudad) {
+    public List<ThriftCursoDto> buscarCursosByFechaYCiudad(String ciudad) {
 
         LocalDateTime desdeDt = LocalDateTime.now();
 
         List<Curso> cursos = CursoServiceFactory.getService().buscarCursosByFechaYCiudad(ciudad, desdeDt);
 
-        return CursoToThriftDtoConversor.toThriftCursoDtos(cursos);
+        return CursoToThriftCursoDtoConversor.toThriftCursoDtos(cursos);
     }
 
     @Override
