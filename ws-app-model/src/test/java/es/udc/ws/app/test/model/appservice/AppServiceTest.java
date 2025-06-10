@@ -148,7 +148,7 @@ public class AppServiceTest {
         Curso c2 = createCurso(getValidCurso("A"));
         Curso c3 = createCurso(getValidCurso("B"));
         try {
-            List<Curso> list = cursoService.buscarCursosByFechaYCiuddad("A", LocalDateTime.now());
+            List<Curso> list = cursoService.buscarCursosByFechaYCiudad("A", LocalDateTime.now());
             assertEquals(2, list.size());
             for (Curso c : list) {
                 assertEquals("A", c.getCiudad());

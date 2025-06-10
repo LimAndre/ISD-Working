@@ -39,22 +39,16 @@
         <url-pattern>/inscripciones/*</url-pattern>
     </servlet-mapping>
 
-
-
-
-   <!-- Thrift service -->
-   <!-- Fill XXX and uncomment the following lines --> 
-   <!--
+    <!-- Thrift service -->
     <servlet>
-        <servlet-name>ThriftXXXServiceServlet</servlet-name>
-        <servlet-class>es.udc.ws.app.thriftservice.ThriftXXXServiceServlet</servlet-class>
+        <servlet-name>ThriftCursoServiceServlet</servlet-name>
+        <servlet-class>es.udc.ws.app.thriftservice.ThriftCursoServiceServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ThriftXXXServiceServlet</servlet-name>
-        <url-pattern>/thrift/XXXservice</url-pattern>
+        <servlet-name>ThriftCursoServiceServlet</servlet-name>
+        <url-pattern>/thrift/cursoservice</url-pattern>
     </servlet-mapping>
-    -->
 
     <!-- General configuration -->
 

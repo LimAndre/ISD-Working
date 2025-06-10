@@ -68,7 +68,7 @@ public class CursosServlet extends RestHttpServletTemplate {
         LocalDateTime fechaActual = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
 
         List<Curso> cursos = CursoServiceFactory.getService()
-                .buscarCursosByFechaYCiuddad(ciudad.trim(), fechaActual);
+                .buscarCursosByFechaYCiudad(ciudad.trim(), fechaActual);
 
         List<RestCursoDto> cursoDtos = CursoToRestCursoDtoConversor.toRestCursoDtos(cursos);
 

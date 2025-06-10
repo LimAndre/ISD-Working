@@ -26,7 +26,7 @@ public interface CursoService {
         Curso findCurso(Long cursoId)
                 throws InstanceNotFoundException;
 
-        List<Curso> buscarCursosByFechaYCiuddad(String ciudad, LocalDateTime desde);
+        List<Curso> buscarCursosByFechaYCiudad(String ciudad, LocalDateTime desde);
 
 
         Long inscribirUsuario(Long cursoId,

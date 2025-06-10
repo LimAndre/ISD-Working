@@ -156,7 +156,7 @@ public class CursoServiceImpl implements CursoService{
     }
 
     @Override
-    public List<Curso> buscarCursosByFechaYCiuddad(String ciudad, LocalDateTime desde) {
+    public List<Curso> buscarCursosByFechaYCiudad(String ciudad, LocalDateTime desde) {
         try (Connection connection = dataSource.getConnection()) {
 
             List<Curso> cursos =
