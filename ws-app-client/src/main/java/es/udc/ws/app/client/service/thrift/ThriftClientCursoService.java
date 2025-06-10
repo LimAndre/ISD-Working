@@ -14,12 +14,20 @@ import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
+import es.udc.ws.app.client.service.thrift.ClientInscripcionDtoToThriftInscripcionDtoConversor;
+
+import es.udc.ws.cursos.thrift.ThriftCursoService;
+import es.udc.ws.cursos.thrift.ThriftInputValidationException;
+import es.udc.ws.cursos.thrift.ThriftInstanceNotFoundException;
+import es.udc.ws.cursos.thrift.ThriftCourseClosedException;
+import es.udc.ws.cursos.thrift.ThriftCourseFullException;
+
 import java.util.List;
 
 public class ThriftClientCursoService implements ClientCursoService {
 
     private final static String ENDPOINT_ADDRESS_PARAMETER =
-            "ThriftClientMovieService.endpointAddress";
+            "ThriftClientCursoService.endpointAddress";
 
     private final static String endpointAddress =
             ConfigurationParametersManager.getParameter(ENDPOINT_ADDRESS_PARAMETER);
@@ -85,14 +93,14 @@ public class ThriftClientCursoService implements ClientCursoService {
     }
 
 
-    private ThriftMovieService.Client getClient() {
+    private ThriftCursoService.Client getClient() {
 
         try {
 
             TTransport transport = new THttpClient(endpointAddress);
             TProtocol protocol = new TBinaryProtocol(transport);
 
-            return new ThriftMovieService.Client(protocol);
+            return new ThriftCursoService.Client(protocol);
 
         } catch (TTransportException e) {
             throw new RuntimeException(e);
